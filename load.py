@@ -14,8 +14,9 @@ AWS_BUCKET_NAME= os.getenv('AWS_BUCKET_NAME') #loads in AWS bucket which makes i
 #print(AWS_ACCESS_KEY)
 #print(AWS_SECRET_ACCESS_KEY)
 
-test_file = '2026-11-11 15-30-11.json'
-file_location = 'data/2026-11-11 15-30-11.json'
+data_dir = 'data'
+#test_file = '2026-11-11 15-30-11.json'
+file_location = os.listdir(data_dir)
 
 s3_client = boto3.client(
     's3',
@@ -23,4 +24,11 @@ s3_client = boto3.client(
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY
 )
 
-s3_client.upload_file(file_location, AWS_BUCKET_NAME, test_file)
+for file in file_location:
+    to_upload = f'{data_dir}/{file}'
+    try:
+        s3_client.upload_file(to_upload, AWS_BUCKET_NAME, file) #file location, bucket name, file name
+        print(f'File {file} successfully uploaded')
+        os.remove(to_upload)
+    except Exception as e:
+        print(f'Something went wrong. Error {e}')
