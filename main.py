@@ -40,4 +40,10 @@ extract_result = extract_to_json(url,data_dir,timestamp,max_attempts=3)
 
 print(extract_result)
 
-load_result = load_to_aws(data_dir,AWS_ACCESS_KEY,AWS_SECRET_ACCESS_KEY,AWS_BUCKET_NAME)
+if extract_result:
+
+    #run load to s3
+    load_result = load_to_aws(data_dir,AWS_ACCESS_KEY,AWS_SECRET_ACCESS_KEY,AWS_BUCKET_NAME)
+
+else:
+    logger.info("extract failed")
